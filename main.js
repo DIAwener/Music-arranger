@@ -6,7 +6,7 @@ function renderHome() {
     <section class="hero">
       <div class="container">
         <h1>Создавайте Профессиональные Музыкальные Аранжировки</h1>
-        <p>Воплотите ваши творческие идеи в жизнь с помощью нашего мощного аудио редактора</p>
+        <p>Участник конкурса «КРИТ-2025» Ишкузин Даниил приветствует жюри конкурса!</p>
         <div class="hero-buttons">
           <a href="#" class="btn btn-primary" onclick="navigate('register')">Начать бесплатно</a>
           <a href="#" class="btn btn-secondary" onclick="navigate('login')">Войти</a>
