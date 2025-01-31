@@ -1,636 +1,363 @@
 import './style.css';
 
-// Функция для рендеринга главной страницы
-function renderHome() {
-  return `
-    <section class="hero">
-      <div class="container">
-        <h1>Создавайте Профессиональные Музыкальные Аранжировки</h1>
-        <p>Участник конкурса «КРИТ-2025» Ишкузин Даниил приветствует жюри конкурса!</p>
-        <div class="hero-buttons">
-          <a href="#" class="btn btn-primary" onclick="navigate('register')">Начать бесплатно</a>
-          <a href="#" class="btn btn-secondary" onclick="navigate('login')">Войти</a>
-        </div>
-      </div>
-    </section>
-    <section class="features container">
-      <h2 class="section-title">Возможности</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🎵</div>
-          <h3>Профессиональный Аудио Редактор</h3>
-          <p>Мощные инструменты для создания, редактирования и микширования музыки</p>
-          <ul class="feature-list">
-            <li>Многодорожечная запись</li>
-            <li>Встроенные эффекты</li>
-            <li>MIDI поддержка</li>
-          </ul>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🎚</div>
-          <h3>Сведение и Мастеринг</h3>
-          <p>Профессиональные инструменты для финальной обработки</p>
-          <ul class="feature-list">
-            <li>Эквализация</li>
-            <li>Компрессия</li>
-            <li>Лимитирование</li>
-          </ul>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">👥</div>
-          <h3>Совместная Работа</h3>
-          <p>Работайте над проектами вместе с другими музыкантами</p>
-          <ul class="feature-list">
-            <li>Облачное хранение</li>
-            <li>Управление версиями</li>
-            <li>Комментарии и обсуждения</li>
-          </ul>
-        </div>
-      </div>
-    </section>   
-  `;
-}
-
-// Функция для рендеринга страницы входа
-function renderLogin() {
-  return `
-    <section class="auth-section">
-      <div class="auth-container">
-        <h2>Добро пожаловать</h2>
-        <p class="auth-description">Войдите в свой аккаунт чтобы продолжить работу</p>
-        <form class="auth-form" onsubmit="handleLogin(event)">
-          <div class="form-group">
-            <label for="name">Имя:</label>
-            <input type="text" id="name" required placeholder="Ваше имя">
-          </div>
-          <div class="form-group">
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" required placeholder="Введите пароль">
-            <a href="#" class="forgot-password">Забыли пароль?</a>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">Войти</button>
-          <div class="social-login">
-            <button type="button" class="btn btn-google">Google</button>
-            <button type="button" class="btn btn-facebook">Facebook</button>
-          </div>
-        </form>
-        <p class="auth-links">
-          Нет аккаунта? <a href="#" onclick="navigate('register')">Зарегистрироваться</a>
-        </p>
-      </div>
-    </section>
-  `;
-}
-
-// Функция для рендеринга страницы регистрации
-function renderRegister() {
-  return `
-    <section class="auth-section">
-      <div class="auth-container">
-        <h2>Создать аккаунт</h2>
-        <p class="auth-description">Присоединяйтесь к сообществу музыкантов</p>
-        <form class="auth-form" onsubmit="handleRegister(event)">
-          <div class="form-group">
-            <label for="name">Имя:</label>
-            <input type="text" id="name" required placeholder="Ваше имя">
-          </div>
-          <div class="form-group">
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" required minlength="8" 
-                   placeholder="Минимум 8 символов">
-            <div class="password-strength"></div>
-          </div>
-          <div class="form-group">
-            <label for="confirm-password">Подтвердите пароль:</label>
-            <input type="password" id="confirm-password" required 
-                   placeholder="Повторите пароль">
-          </div>
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" required>
-              Я согласен с <a href="#">условиями использования</a>
-            </label>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">Создать аккаунт</button>
-          <div class="social-login">
-            <button type="button" class="btn btn-google">Google</button>
-            <button type="button" class="btn btn-facebook">Facebook</button>
-          </div>
-        </form>
-        <p class="auth-links">
-          Уже есть аккаунт? <a href="#" onclick="navigate('login')">Войти</a>
-        </p>
-      </div>
-    </section>
-  `;
-}
-
-// Функция для рендеринга рабочего пространства
-function renderWorkspace() {
-  return `
-    <div class="workspace">
-      <div class="workspace-header">
-        <div class="workspace-title">
-          <h2>Рабочее пространство</h2>
-          <input type="text" class="project-name" value="Новый проект" placeholder="Название проекта">
-        </div>
-        <div class="workspace-controls">
-          <button class="btn btn-secondary" onclick="saveProject()">
-            <i class="icon-save"></i> Сохранить
-          </button>
-          <button class="btn btn-primary" onclick="handleFileUpload()">
-            <i class="icon-upload"></i> Загрузить аудио
-          </button>
-          <input type="file" id="audio-upload" accept="audio/*" multiple style="display: none" 
-                 onchange="handleAudioFile(event)">
-        </div>
-      </div>
-      
-      <div class="tracks-container">
-        <div class="tracks-header">
-          <div class="track-controls">
-            <button class="btn btn-play" onclick="playAll()">
-              <i class="icon-play"></i> Воспроизвести
-            </button>
-            <button class="btn btn-stop" onclick="stopAll()">
-              <i class="icon-stop"></i> Стоп
-            </button>
-            <button class="btn btn-record" onclick="startRecording()">
-              <i class="icon-record"></i> Запись
-            </button>
-          </div>
-          <div class="transport-controls">
-            <span class="time-display">00:00:00</span>
-            <div class="transport-buttons">
-              <button class="btn btn-rewind" onclick="rewind()">
-                <i class="icon-rewind"></i>
-              </button>
-              <button class="btn btn-forward" onclick="forward()">
-                <i class="icon-forward"></i>
-              </button>
-            </div>
-          </div>
-          <div class="master-volume">
-            <label>Общая громкость</label>
-            <input type="range" min="0" max="100" value="100" class="volume-slider" 
-                   onchange="setMasterVolume(this.value)">
-            <span class="volume-value">100%</span>
-          </div>
-        </div>
-        
-        <div class="timeline">
-          <div class="timeline-ruler"></div>
-        </div>
-        
-        <div id="tracks-list" class="tracks-list">
-          <!-- Треки будут добавляться здесь -->
-        </div>
-      </div>
-
-      <div class="effects-panel">
-        <div class="effects-header">
-          <h3>Эффекты и обработка</h3>
-          <button class="btn btn-add-effect">Добавить эффект</button>
-        </div>
-        <div class="effect-controls">
-          <div class="effect-group">
-            <div class="effect-header">
-              <label>Реверберация</label>
-              <button class="btn btn-toggle-effect">Вкл</button>
-            </div>
-            <div class="effect-params">
-              <div class="param-group">
-                <label>Размер</label>
-                <input type="range" min="0" max="100" value="50" 
-                       onchange="setReverbSize(this.value)">
-              </div>
-              <div class="param-group">
-                <label>Затухание</label>
-                <input type="range" min="0" max="100" value="30" 
-                       onchange="setReverbDecay(this.value)">
-              </div>
-            </div>
-          </div>
-          <div class="effect-group">
-            <div class="effect-header">
-              <label>Эквалайзер</label>
-              <button class="btn btn-toggle-effect">Вкл</button>
-            </div>
-            <div class="eq-controls">
-              <div class="eq-band">
-                <span>Низкие</span>
-                <input type="range" min="-12" max="12" value="0" orient="vertical" 
-                       onchange="setEQ(0, this.value)">
-                <span>0 dB</span>
-              </div>
-              <div class="eq-band">
-                <span>Средние</span>
-                <input type="range" min="-12" max="12" value="0" orient="vertical" 
-                       onchange="setEQ(1, this.value)">
-                <span>0 dB</span>
-              </div>
-              <div class="eq-band">
-                <span>Высокие</span>
-                <input type="range" min="-12" max="12" value="0" orient="vertical" 
-                       onchange="setEQ(2, this.value)">
-                <span>0 dB</span>
-              </div>
-            </div>
-          </div>
-          <div class="effect-group">
-            <div class="effect-header">
-              <label>Компрессор</label>
-              <button class="btn btn-toggle-effect">Выкл</button>
-            </div>
-            <div class="effect-params">
-              <div class="param-group">
-                <label>Порог</label>
-                <input type="range" min="-60" max="0" value="-24" 
-                       onchange="setCompressorThreshold(this.value)">
-              </div>
-              <div class="param-group">
-                <label>Соотношение</label>
-                <input type="range" min="1" max="20" value="4" 
-                       onchange="setCompressorRatio(this.value)">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// Аудио контекст и обработчики
-let audioContext;
-let masterGainNode;
-let tracks = [];
-let reverbNode;
-let eqNodes = [];
-let compressorNode;
-
-// Инициализация Web Audio API
-function initAudio() {
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  masterGainNode = audioContext.createGain();
+// Функции для работы с пользователями
+const userStorage = {
+  getUsers() {
+    return JSON.parse(localStorage.getItem('users') || '[]');
+  },
   
-  // Создаем узлы эффектов
-  reverbNode = audioContext.createConvolver();
-  compressorNode = audioContext.createDynamicsCompressor();
+  saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+  },
   
-  // Создаем эквалайзер
-  const frequencies = [60, 1000, 8000];
-  eqNodes = frequencies.map(freq => {
-    const filter = audioContext.createBiquadFilter();
-    filter.type = 'peaking';
-    filter.frequency.value = freq;
-    filter.Q.value = 1;
-    return filter;
-  });
+  addUser(username, password) {
+    const users = this.getUsers();
+    if (users.some(user => user.username === username)) {
+      throw new Error('Пользователь с таким именем уже существует');
+    }
+    users.push({ username, password });
+    this.saveUsers(users);
+  },
   
-  // Соединяем узлы
-  masterGainNode.connect(reverbNode);
-  reverbNode.connect(compressorNode);
-  eqNodes.reduce((prev, curr) => {
-    prev.connect(curr);
-    return curr;
-  }, compressorNode).connect(audioContext.destination);
-}
-
-// Обработчик загрузки файла
-window.handleFileUpload = () => {
-  document.getElementById('audio-upload').click();
+  checkUser(username, password) {
+    const users = this.getUsers();
+    return users.find(user => user.username === username && user.password === password);
+  }
 };
 
-// Обработчик выбора аудио файла
-window.handleAudioFile = async (event) => {
-  const files = event.target.files;
-  if (!files.length) return;
+// Массив для хранения треков
+let tracks = [];
 
-  for (const file of files) {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const arrayBuffer = e.target.result;
-      try {
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        addTrack(audioBuffer, file.name);
-      } catch (error) {
-        console.error('Ошибка декодирования аудио:', error);
-        alert(`Ошибка при загрузке файла ${file.name}`);
-      }
-    };
-    reader.readAsArrayBuffer(file);
+// Функции для работы с аудио
+window.updateMasterVolume = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.volume = value / 100;
+    }
+  });
+};
+
+window.updateTrackVolume = function(trackId, value) {
+  const track = tracks[trackId];
+  if (track && track.audio) {
+    track.audio.volume = value / 100;
   }
 };
 
 // Добавление нового трека
-function addTrack(audioBuffer, name) {
-  const track = {
-    buffer: audioBuffer,
-    name: name,
-    gainNode: audioContext.createGain(),
-    source: null,
-    playing: false,
-    muted: false,
-    solo: false,
-    volume: 1,
-    pan: 0
-  };
-
-  // Создаем панорамный узел
-  const panNode = audioContext.createStereoPanner();
-  track.panNode = panNode;
-
-  // Соединяем узлы
-  track.gainNode.connect(panNode);
-  panNode.connect(masterGainNode);
-  
-  tracks.push(track);
-  renderTracks();
-}
-
-// Отрисовка треков
-function renderTracks() {
-  const tracksList = document.getElementById('tracks-list');
-  tracksList.innerHTML = tracks.map((track, index) => `
-    <div class="track ${track.playing ? 'playing' : ''} ${track.muted ? 'muted' : ''} ${track.solo ? 'solo' : ''}">
-      <div class="track-info">
-        <div class="track-header">
-          <span class="track-name" title="${track.name}">${track.name}</span>
-          <div class="track-buttons">
-            <button class="btn btn-mute ${track.muted ? 'active' : ''}" 
-                    onclick="toggleMute(${index})">M</button>
-            <button class="btn btn-solo ${track.solo ? 'active' : ''}" 
-                    onclick="toggleSolo(${index})">S</button>
-          </div>
-        </div>
-        <div class="track-controls">
-          <button class="btn btn-play" onclick="playTrack(${index})">
-            ${track.playing ? '⏸' : '▶'}
-          </button>
-          <div class="track-sliders">
-            <div class="volume-control">
-              <input type="range" min="0" max="100" 
-                     value="${track.volume * 100}" 
-                     onchange="setTrackVolume(${index}, this.value)">
-              <span class="volume-value">${Math.round(track.volume * 100)}%</span>
-            </div>
-            <div class="pan-control">
-              <input type="range" min="-100" max="100" 
-                     value="${track.pan * 100}" 
-                     onchange="setTrackPan(${index}, this.value)">
-              <span class="pan-value">Pan: ${track.pan}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="track-waveform" id="waveform-${index}">
-        <!-- Визуализация волны будет добавлена здесь -->
+window.addNewTrack = function() {
+  const trackId = tracks.length;
+  const trackElement = document.createElement('div');
+  trackElement.className = 'track';
+  trackElement.innerHTML = `
+    <div class="track-info">
+      <span class="track-name">Трек ${trackId + 1}</span>
+      <div class="track-controls">
+        <input type="range" min="0" max="100" value="100" 
+               oninput="updateTrackVolume(${trackId}, this.value)">
+        <button onclick="playTrack(${trackId})">Воспроизвести</button>
+        <button onclick="stopTrack(${trackId})">Стоп</button>
+        <button onclick="deleteTrack(${trackId})">Удалить</button>
       </div>
     </div>
-  `).join('');
+  `;
+  document.getElementById('tracks-list').appendChild(trackElement);
+  tracks.push({ id: trackId, element: trackElement });
+};
 
-  // Добавляем визуализацию для каждого трека
-  tracks.forEach((track, index) => {
-    if (track.buffer) {
-      drawWaveform(track.buffer, `waveform-${index}`);
-    }
-  });
-}
-
-// Функция для отрисовки волны
-function drawWaveform(buffer, containerId) {
-  const container = document.getElementById(containerId);
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  
-  canvas.width = container.clientWidth;
-  canvas.height = container.clientHeight;
-  container.appendChild(canvas);
-
-  const data = buffer.getChannelData(0);
-  const step = Math.ceil(data.length / canvas.width);
-  const amp = canvas.height / 2;
-
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.beginPath();
-  ctx.moveTo(0, amp);
-
-  for (let i = 0; i < canvas.width; i++) {
-    let min = 1.0;
-    let max = -1.0;
+// Загрузка файла
+window.handleFileUpload = function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const audio = new Audio(URL.createObjectURL(file));
+    const trackId = tracks.length;
     
-    for (let j = 0; j < step; j++) {
-      const datum = data[(i * step) + j];
-      if (datum < min) min = datum;
-      if (datum > max) max = datum;
-    }
-    
-    ctx.lineTo(i, (1 + min) * amp);
-    ctx.lineTo(i, (1 + max) * amp);
+    const trackElement = document.createElement('div');
+    trackElement.className = 'track';
+    trackElement.innerHTML = `
+      <div class="track-info">
+        <span class="track-name">${file.name}</span>
+        <div class="track-controls">
+          <input type="range" min="0" max="100" value="100" 
+                 oninput="updateTrackVolume(${trackId}, this.value)">
+          <button onclick="playTrack(${trackId})">Воспроизвести</button>
+          <button onclick="stopTrack(${trackId})">Стоп</button>
+          <button onclick="deleteTrack(${trackId})">Удалить</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('tracks-list').appendChild(trackElement);
+    tracks.push({ id: trackId, audio, element: trackElement });
   }
-
-  ctx.strokeStyle = '#4CAF50';
-  ctx.stroke();
-}
+};
 
 // Воспроизведение трека
-window.playTrack = (index) => {
-  const track = tracks[index];
-  if (track.playing) {
-    stopTrack(index);
-    return;
+window.playTrack = function(trackId) {
+  const track = tracks[trackId];
+  if (track && track.audio) {
+    track.audio.play();
   }
-
-  track.source = audioContext.createBufferSource();
-  track.source.buffer = track.buffer;
-  track.source.connect(track.gainNode);
-  
-  track.source.onended = () => {
-    track.playing = false;
-    renderTracks();
-  };
-  
-  track.source.start();
-  track.playing = true;
-  renderTracks();
 };
 
 // Остановка трека
-window.stopTrack = (index) => {
-  const track = tracks[index];
-  if (!track.playing) return;
-
-  track.source.stop();
-  track.source.disconnect();
-  track.playing = false;
-  renderTracks();
+window.stopTrack = function(trackId) {
+  const track = tracks[trackId];
+  if (track && track.audio) {
+    track.audio.pause();
+    track.audio.currentTime = 0;
+  }
 };
 
-// Установка громкости трека
-window.setTrackVolume = (index, value) => {
-  const track = tracks[index];
-  track.volume = value / 100;
-  track.gainNode.gain.setValueAtTime(track.volume, audioContext.currentTime);
-  renderTracks();
+// Удаление трека
+window.deleteTrack = function(trackId) {
+  const track = tracks[trackId];
+  if (track) {
+    if (track.audio) {
+      track.audio.pause();
+    }
+    track.element.remove();
+    tracks[trackId] = null;
+  }
 };
 
-// Установка панорамы трека
-window.setTrackPan = (index, value) => {
-  const track = tracks[index];
-  track.pan = value / 100;
-  track.panNode.pan.setValueAtTime(track.pan, audioContext.currentTime);
-  renderTracks();
-};
-
-// Включение/выключение мьюта
-window.toggleMute = (index) => {
-  const track = tracks[index];
-  track.muted = !track.muted;
-  track.gainNode.gain.setValueAtTime(
-    track.muted ? 0 : track.volume,
-    audioContext.currentTime
-  );
-  renderTracks();
-};
-
-// Включение/выключение соло
-window.toggleSolo = (index) => {
-  const track = tracks[index];
-  track.solo = !track.solo;
-  
-  const hasSoloTrack = tracks.some(t => t.solo);
-  
-  tracks.forEach((t, i) => {
-    const shouldPlay = !hasSoloTrack || t.solo;
-    t.gainNode.gain.setValueAtTime(
-      shouldPlay && !t.muted ? t.volume : 0,
-      audioContext.currentTime
-    );
+// Воспроизведение всех треков
+window.playAllTracks = function() {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.play();
+    }
   });
-  
-  renderTracks();
 };
 
-// Установка общей громкости
-window.setMasterVolume = (value) => {
-  masterGainNode.gain.setValueAtTime(value / 100, audioContext.currentTime);
+// Остановка всех треков
+window.stopAllTracks = function() {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.pause();
+      track.audio.currentTime = 0;
+    }
+  });
 };
 
-// Установка параметров ревербератора
-window.setReverbSize = (value) => {
-  // Реализация изменения размера реверберации
+// Функции для аудио эффектов
+window.updatePlaybackRate = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.playbackRate = value / 100;
+    }
+  });
+  document.querySelector('.effect-group .value-display').textContent = `${value}%`;
 };
 
-window.setReverbDecay = (value) => {
-  // Реализация изменения затухания реверберации
+window.updatePan = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      if (!track.audioContext) {
+        track.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        track.source = track.audioContext.createMediaElementSource(track.audio);
+        track.panNode = track.audioContext.createStereoPanner();
+        track.source.connect(track.panNode);
+        track.panNode.connect(track.audioContext.destination);
+      }
+      track.panNode.pan.value = value / 100;
+    }
+  });
+  const displayText = value === 0 ? 'Центр' : value < 0 ? `${Math.abs(value)}% Лево` : `${value}% Право`;
+  document.querySelectorAll('.effect-group .value-display')[1].textContent = displayText;
 };
 
-// Установка параметров эквалайзера
-window.setEQ = (band, value) => {
-  eqNodes[band].gain.setValueAtTime(value, audioContext.currentTime);
+window.toggleLoop = function() {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.loop = !track.audio.loop;
+    }
+  });
+  const btn = document.querySelector('.effect-group button');
+  btn.textContent = btn.textContent.includes('Включить') ? 'Выключить повтор' : 'Включить повтор';
 };
 
-// Установка параметров компрессора
-window.setCompressorThreshold = (value) => {
-  compressorNode.threshold.setValueAtTime(value, audioContext.currentTime);
+window.updateLoopStart = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.loopStart = parseFloat(value);
+    }
+  });
 };
 
-window.setCompressorRatio = (value) => {
-  compressorNode.ratio.setValueAtTime(value, audioContext.currentTime);
+window.updateLoopEnd = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.audio.loopEnd = parseFloat(value);
+    }
+  });
 };
+
+window.updateTrimStart = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.trimStart = parseFloat(value);
+    }
+  });
+};
+
+window.updateTrimEnd = function(value) {
+  tracks.forEach(track => {
+    if (track && track.audio) {
+      track.trimEnd = parseFloat(value);
+    }
+  });
+};
+
+window.applyTrim = function() {
+  tracks.forEach(track => {
+    if (track && track.audio && track.trimStart !== undefined && track.trimEnd !== undefined) {
+      track.audio.currentTime = track.trimStart;
+      // Создаем новый буфер для обрезанного аудио
+      const duration = track.trimEnd - track.trimStart;
+      if (duration > 0) {
+        track.audio.duration = duration;
+      }
+    }
+  });
+};
+
+window.toggleMetronome = function() {
+  const btn = document.querySelector('.metronome-controls button');
+  if (!window.metronome) {
+    window.metronome = {
+      isPlaying: false,
+      tempo: 120,
+      audioContext: new (window.AudioContext || window.webkitAudioContext)()
+    };
+  }
+
+  if (!window.metronome.isPlaying) {
+    window.metronome.isPlaying = true;
+    btn.textContent = 'Выключить метроном';
+    playMetronome();
+  } else {
+    window.metronome.isPlaying = false;
+    btn.textContent = 'Включить метроном';
+  }
+};
+
+function playMetronome() {
+  if (!window.metronome.isPlaying) return;
+
+  const time = window.metronome.audioContext.currentTime;
+  const osc = window.metronome.audioContext.createOscillator();
+  const gain = window.metronome.audioContext.createGain();
+
+  osc.connect(gain);
+  gain.connect(window.metronome.audioContext.destination);
+
+  osc.frequency.value = 1000;
+  gain.gain.value = 0.5;
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+
+  osc.start(time);
+  osc.stop(time + 0.05);
+
+  setTimeout(playMetronome, (60 / window.metronome.tempo) * 1000);
+}
+
+window.updateTempo = function(value) {
+  if (window.metronome) {
+    window.metronome.tempo = parseInt(value, 10);
+  }
+};
+
+// Функция навигации
+window.navigate = function(page) {
+  const sections = ['home-section', 'login-section', 'register-section', 'workspace-section'];
+  sections.forEach(section => {
+    document.getElementById(section).style.display = 'none';
+  });
+
+  document.getElementById(`${page}-section`).style.display = 'block';
+  updateNavigation();
+  updateUserWelcome();
+};
+
+// Функция обновления навигации
+function updateNavigation() {
+  const currentUser = localStorage.getItem('currentUser');
+  const navLinks = document.querySelector('.nav-links');
+  if (currentUser) {
+    navLinks.innerHTML = `
+      <a href="#" class="nav-link" onclick="navigate('home')">Главная</a>
+      <a href="#" class="nav-link" onclick="navigate('workspace')">Аранжировка</a>
+      <a href="#" class="nav-link" onclick="handleLogout()">Выйти</a>
+    `;
+  } else {
+    navLinks.innerHTML = `
+      <a href="#" class="nav-link" onclick="navigate('home')">Главная</a>
+      <a href="#" class="nav-link" onclick="navigate('login')">Вход</a>
+      <a href="#" class="nav-link" onclick="navigate('register')">Регистрация</a>
+    `;
+  }
+}
+
+// Функция обновления приветствия пользователя
+function updateUserWelcome() {
+  const currentUser = localStorage.getItem('currentUser');
+  const welcomeDiv = document.getElementById('user-welcome');
+  if (currentUser) {
+    welcomeDiv.innerHTML = `
+      <p>Добро пожаловать, ${currentUser}!</p>
+      <a href="#" onclick="navigate('workspace')" class="btn btn-primary">Перейти к аранжировке</a>
+    `;
+  } else {
+    welcomeDiv.innerHTML = '';
+  }
+}
+
 // Обработчики форм
-window.handleLogin = (event) => {
+window.handleLogin = function(event) {
   event.preventDefault();
-  const name = document.getElementById('name').value;
+  const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
   
-  // Здесь должна быть реальная аутентификация
-  console.log('Вход:', { name, password });
-  
-  // Имитация успешного входа
-  localStorage.setItem('user', JSON.stringify({ name }));
-  navigate('workspace');
+  try {
+    const user = userStorage.checkUser(username, password);
+    if (user) {
+      localStorage.setItem('currentUser', username);
+      alert('Вход выполнен успешно!');
+      navigate('home');
+    } else {
+      alert('Неверный никнейм или пароль');
+    }
+  } catch (error) {
+    alert(error.message);
+  }
 };
 
-window.handleRegister = (event) => {
+window.handleRegister = function(event) {
   event.preventDefault();
-  const name = document.getElementById('name').value;
-  const password = document.getElementById('password').value;
-  const confirmPassword = document.getElementById('confirm-password').value;
+  const username = document.getElementById('newUsername').value;
+  const password = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
   
   if (password !== confirmPassword) {
     alert('Пароли не совпадают');
     return;
   }
   
-  if (password.length < 8) {
-    alert('Пароль должен содержать минимум 8 символов');
-    return;
+  try {
+    userStorage.addUser(username, password);
+    alert('Регистрация успешна! Теперь вы можете войти.');
+    navigate('login');
+  } catch (error) {
+    alert(error.message);
   }
-  
-  // Здесь должна быть реальная регистрация
-  console.log('Регистрация:', { name, password });
-  
-  // Имитация успешной регистрации
-  localStorage.setItem('user', JSON.stringify({ name, password }));
-  navigate('workspace');
+};
+
+window.handleLogout = function() {
+  localStorage.removeItem('currentUser');
+  alert('Вы вышли из системы');
+  navigate('home');
 };
 
 // Инициализация приложения
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('#app').innerHTML = `
-    <header class="header">
-      <nav class="container nav">
-        <a href="#" class="nav-logo" onclick="navigate('home')">
-          <img src="/logo.svg" alt="Logo" class="nav-logo-img">
-          <span>Аранжировка Музыки</span>
-        </a>
-        <div class="nav-links">
-          <a href="#" class="nav-link" onclick="navigate('home')">Главная</a>
-          <a href="#" class="nav-link" onclick="navigate('login')">Вход</a>
-          <a href="#" class="nav-link" onclick="navigate('register')">Регистрация</a>
-        </div>
-      </nav>
-    </header>
-    <main></main>
-    <footer class="footer">
-      <div class="container">
-        <p>&copy; 2023 Аранжировка Музыки. Все права защищены.</p>
-      </div>
-    </footer>
-  `;
-
-  // Показываем главную страницу при загрузке
-  navigate('home');
-});
-// Инициализация приложения
-document.addEventListener('DOMContentLoaded', () => {
-  const app = document.getElementById('app');
-  if (app) {
-    // Рендерим домашнюю страницу по умолчанию
-    app.innerHTML = renderHome();
-  }
-});
-
-// Функция навигации
-window.navigate = function(page) {
-  const app = document.getElementById('app');
-  switch(page) {
-    case 'home':
-      app.innerHTML = renderHome();
-      break;
-    case 'login':
-      app.innerHTML = renderLogin();
-      break;
-    case 'register':
-      app.innerHTML = renderRegister();
-      break;
-    case 'workspace':
-      app.innerHTML = renderWorkspace();
-      initAudio();
-      break;
-  }
-}
+updateNavigation();
+navigate('home');

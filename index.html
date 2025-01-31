@@ -1,24 +1,164 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/javascript.svg" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Создавайте профессиональные музыкальные аранжировки онлайн с помощью современных инструментов для редактирования, сведения и мастеринга" />
-    <meta name="keywords" content="музыка, аранжировка, редактор, сведение, мастеринг, аудио" />
-    <meta name="author" content="Аранжировка Музыки" />
-    <meta property="og:title" content="Аранжировка Музыки - Онлайн редактор" />
-    <meta property="og:description" content="Создавайте профессиональные музыкальные аранжировки онлайн" />
-    <meta property="og:type" content="website" />
-    <title>Аранжировка Музыки | Онлайн редактор аудио</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Music Arrangement</title>
   </head>
   <body>
-    <div id="app"></div>
-    <noscript>Для работы приложения необходимо включить JavaScript</noscript>
+    <div id="app">
+      <header class="header">
+        <nav class="container nav">
+          <a href="#" class="nav-logo" onclick="navigate('home')">Аранжировка Музыки</a>
+          <p>Участник конкурса «КРИТ-2025» Ишкузин Даниил приветствует жюри конкурса!»</p>
+          <div class="nav-links">
+            <a href="#" class="nav-link" onclick="navigate('home')">Главная</a>
+            <a href="#" class="nav-link" onclick="navigate('login')">Вход</a>
+            <a href="#" class="nav-link" onclick="navigate('register')">Регистрация</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <!-- Секция главной страницы -->
+        <section id="home-section" class="hero">
+          <h1>Аранжировка Музыки</h1>
+          <p>Создавайте профессиональные аранжировки онлайн</p>
+          <div id="user-welcome"></div>
+        </section>
+
+        <!-- Секция входа -->
+        <section id="login-section" class="auth-section" style="display: none;">
+          <div class="auth-container">
+            <h2>Вход</h2>
+            <form class="auth-form" onsubmit="handleLogin(event)">
+              <div class="form-group">
+                <label for="username">Никнейм</label>
+                <input type="text" id="username" name="username" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+            <div class="auth-links">
+              <p>Нет аккаунта? <a href="#" onclick="navigate('register')">Зарегистрироваться</a></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Секция регистрации -->
+        <section id="register-section" class="auth-section" style="display: none;">
+          <div class="auth-container">
+            <h2>Регистрация</h2>
+            <form class="auth-form" onsubmit="handleRegister(event)">
+              <div class="form-group">
+                <label for="newUsername">Никнейм</label>
+                <input type="text" id="newUsername" name="username" required>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">Пароль</label>
+                <input type="password" id="newPassword" name="password" required>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Подтвердите пароль</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </form>
+            <div class="auth-links">
+              <p>Уже есть аккаунт? <a href="#" onclick="navigate('login')">Войти</a></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Секция рабочего пространства -->
+        <section id="workspace-section" class="workspace" style="display: none;">
+          <div class="workspace-header">
+            <h2>Рабочее пространство</h2>
+            <div class="workspace-controls">
+              <button class="btn btn-primary" onclick="addNewTrack()">Добавить трек</button>
+              <div class="master-volume">
+                <label>Общая громкость</label>
+                <input type="range" min="0" max="100" value="100" oninput="updateMasterVolume(this.value)">
+              </div>
+            </div>
+          </div>
+
+          <div class="tracks-container">
+            <div class="tracks-header">
+              <h3>Треки</h3>
+              <div class="track-controls">
+                <button class="btn" onclick="playAllTracks()">Воспроизвести все</button>
+                <button class="btn" onclick="stopAllTracks()">Стоп</button>
+                <input type="file" id="track-upload" accept="audio/*" onchange="handleFileUpload(event)" style="display: none">
+                <button class="btn btn-primary" onclick="document.getElementById('track-upload').click()">Загрузить трек</button>
+              </div>
+            </div>
+            
+            <div id="tracks-list">
+              <!-- Здесь будут отображаться треки -->
+            </div>
+          </div>
+
+          <div class="effects-panel">
+            <h3>Эффекты и инструменты</h3>
+            <div class="effect-controls">
+              <!-- Скорость воспроизведения -->
+              <div class="effect-group">
+                <label>Скорость воспроизведения</label>
+                <input type="range" min="50" max="200" value="100" oninput="updatePlaybackRate(this.value)">
+                <span class="value-display">100%</span>
+              </div>
+
+              <!-- Панорамирование -->
+              <div class="effect-group">
+                <label>Панорамирование</label>
+                <input type="range" min="-100" max="100" value="0" oninput="updatePan(this.value)">
+                <span class="value-display">Центр</span>
+              </div>
+
+              <!-- Повтор -->
+              <div class="effect-group">
+                <label>Повтор трека</label>
+                <button class="btn" onclick="toggleLoop()">Включить повтор</button>
+              </div>
+
+              <!-- Точки повтора -->
+              <div class="effect-group">
+                <label>Точки повтора (в секундах)</label>
+                <div class="loop-points">
+                  <input type="number" min="0" step="0.1" placeholder="Начало" oninput="updateLoopStart(this.value)">
+                  <input type="number" min="0" step="0.1" placeholder="Конец" oninput="updateLoopEnd(this.value)">
+                </div>
+              </div>
+
+              <!-- Обрезка трека -->
+              <div class="effect-group">
+                <label>Обрезка трека</label>
+                <div class="trim-controls">
+                  <input type="number" min="0" step="0.1" placeholder="Начало" oninput="updateTrimStart(this.value)">
+                  <input type="number" min="0" step="0.1" placeholder="Конец" oninput="updateTrimEnd(this.value)">
+                  <button class="btn" onclick="applyTrim()">Применить</button>
+                </div>
+              </div>
+
+              <!-- Метроном -->
+              <div class="effect-group">
+                <label>Метроном</label>
+                <div class="metronome-controls">
+                  <input type="number" min="40" max="208" value="120" oninput="updateTempo(this.value)">
+                  <span>BPM</span>
+                  <button class="btn" onclick="toggleMetronome()">Включить метроном</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
