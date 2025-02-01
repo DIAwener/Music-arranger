@@ -1,5 +1,3 @@
-import './style.css';
-
 // Функции для работы с пользователями
 const userStorage = {
   getUsers() {
@@ -212,7 +210,6 @@ window.applyTrim = function() {
   tracks.forEach(track => {
     if (track && track.audio && track.trimStart !== undefined && track.trimEnd !== undefined) {
       track.audio.currentTime = track.trimStart;
-      // Создаем новый буфер для обрезанного аудио
       const duration = track.trimEnd - track.trimStart;
       if (duration > 0) {
         track.audio.duration = duration;

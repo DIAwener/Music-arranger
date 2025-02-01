@@ -148,6 +148,7 @@ body {
   box-shadow: var(--shadow-md);
   width: 100%;
   max-width: 400px;
+  margin: 0 auto;
 }
 
 .auth-container h2 {
@@ -161,12 +162,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 100%;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .form-group label {
@@ -181,6 +184,8 @@ body {
   border-radius: var(--radius-sm);
   font-size: 1rem;
   transition: all 0.3s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
