@@ -1,22 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="public/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Music Arrangement</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Музыкальный аранжировщик | КРИТ-2026</title> 
+    <link rel="stylesheet" href="styles.css">
+    <!-- Добавлен фавикон для Safari -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   </head>
   <body>
     <div id="app">
       <header class="header">
         <nav class="container nav">
-          <a href="#" class="nav-logo" onclick="navigate('home')">Аранжировка Музыки</a>
-          <p>Участник конкурса «КРИТ-2026» Ишкузин Даниил приветствует жюри конкурса!»</p>
+          <a href="#" class="nav-logo" onclick="navigate('home')">
+            <i class="fas fa-music"></i> Аранжировка Музыки <!-- Добавлена иконка -->
+          </a>
+          <p class="contest-info">Участник конкурса «КРИТ-2026» Ишкузин Даниил приветствует жюри конкурса!</p>
           <div class="nav-links">
-            <a href="#" class="nav-link" onclick="navigate('home')">Главная</a>
-            <a href="#" class="nav-link" onclick="navigate('login')">Вход</a>
-            <a href="#" class="nav-link" onclick="navigate('register')">Регистрация</a>
+            <a href="#" class="nav-link" onclick="navigate('home')">
+              <i class="fas fa-home"></i> Главная
+            </a>
+            <a href="#" class="nav-link" onclick="navigate('login')" id="login-link">
+              <i class="fas fa-sign-in-alt"></i> Вход
+            </a>
+            <a href="#" class="nav-link" onclick="navigate('register')" id="register-link">
+              <i class="fas fa-user-plus"></i> Регистрация
+            </a>
+            <!-- Добавлены скрытые ссылки для авторизованных пользователей -->
+            <a href="#" class="nav-link" onclick="navigate('workspace')" id="workspace-link" style="display:none;">
+              <i class="fas fa-sliders-h"></i> Рабочее пространство
+            </a>
+            <a href="#" class="nav-link" onclick="handleLogout()" id="logout-link" style="display:none;">
+              <i class="fas fa-sign-out-alt"></i> Выйти
+            </a>
           </div>
         </nav>
       </header>
@@ -25,27 +42,43 @@
         <!-- Секция главной страницы -->
         <section id="home-section" class="hero">
           <h1>Аранжировка Музыки</h1>
-          <p>Создавайте профессиональные аранжировки онлайн</p>
           <div id="user-welcome"></div>
+          <!-- Добавлено сообщение о загрузке -->
+          <div id="loading-indicator" style="display:none; margin: 20px 0;">
+            <i class="fas fa-spinner fa-spin"></i> Загрузка...
+          </div>
         </section>
 
         <!-- Секция входа -->
         <section id="login-section" class="auth-section" style="display: none;">
           <div class="auth-container">
             <h2>Вход</h2>
-            <form class="auth-form" onsubmit="handleLogin(event)">
+            <!-- Добавлен обработчик reset для формы -->
+            <form class="auth-form" onsubmit="handleLogin(event)" onreset="clearForm('login')">
               <div class="form-group">
                 <label for="username">Никнейм</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required 
+                       placeholder="Введите ваш никнейм">
               </div>
               <div class="form-group">
                 <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Введите ваш пароль">
+                <!-- Добавлен переключатель видимости пароля -->
+                <button type="button" class="show-password-btn" onclick="togglePasswordVisibility('password')">
+                  <i class="fas fa-eye"></i>
+                </button>
               </div>
-              <button type="submit" class="btn btn-primary">Войти</button>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Войти</button>
+                <button type="reset" class="btn btn-secondary">Очистить</button>
+              </div>
+              <!-- Добавлен блок для сообщений об ошибках -->
+              <div id="login-error" class="error-message" style="display:none;"></div>
             </form>
             <div class="auth-links">
               <p>Нет аккаунта? <a href="#" onclick="navigate('register')">Зарегистрироваться</a></p>
+              <p><a href="#" onclick="navigate('home')"><i class="fas fa-arrow-left"></i> На главную</a></p>
             </div>
           </div>
         </section>
@@ -54,23 +87,37 @@
         <section id="register-section" class="auth-section" style="display: none;">
           <div class="auth-container">
             <h2>Регистрация</h2>
-            <form class="auth-form" onsubmit="handleRegister(event)">
+            <form class="auth-form" onsubmit="handleRegister(event)" onreset="clearForm('register')">
               <div class="form-group">
-                <label for="newUsername">Никнейм</label>
-                <input type="text" id="newUsername" name="username" required>
+                <label for="newUsername">Никнейм (минимум 3 символа)</label>
+                <input type="text" id="newUsername" name="username" required 
+                       minlength="3" placeholder="Введите никнейм">
               </div>
               <div class="form-group">
-                <label for="newPassword">Пароль</label>
-                <input type="password" id="newPassword" name="password" required>
+                <label for="newPassword">Пароль (минимум 6 символов)</label>
+                <input type="password" id="newPassword" name="password" required 
+                       minlength="6" placeholder="Введите пароль">
+                <button type="button" class="show-password-btn" onclick="togglePasswordVisibility('newPassword')">
+                  <i class="fas fa-eye"></i>
+                </button>
               </div>
               <div class="form-group">
                 <label for="confirmPassword">Подтвердите пароль</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <input type="password" id="confirmPassword" name="confirmPassword" required 
+                       placeholder="Повторите пароль">
+                <button type="button" class="show-password-btn" onclick="togglePasswordVisibility('confirmPassword')">
+                  <i class="fas fa-eye"></i>
+                </button>
               </div>
-              <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                <button type="reset" class="btn btn-secondary">Очистить</button>
+              </div>
+              <div id="register-error" class="error-message" style="display:none;"></div>
             </form>
             <div class="auth-links">
               <p>Уже есть аккаунт? <a href="#" onclick="navigate('login')">Войти</a></p>
+              <p><a href="#" onclick="navigate('home')"><i class="fas fa-arrow-left"></i> На главную</a></p>
             </div>
           </div>
         </section>
@@ -78,88 +125,170 @@
         <!-- Секция рабочего пространства -->
         <section id="workspace-section" class="workspace" style="display: none;">
           <div class="workspace-header">
-            <h2>Рабочее пространство</h2>
+            <h2>Рабочее пространство <span id="current-user" style="font-size: 0.8em; color: #666;"></span></h2>
             <div class="workspace-controls">
-              <button class="btn btn-primary" onclick="addNewTrack()">Добавить трек</button>
+              <button class="btn btn-primary" onclick="addNewTrack()">
+                <i class="fas fa-plus"></i> Добавить трек
+              </button>
               <div class="master-volume">
-                <label>Общая громкость</label>
-                <input type="range" min="0" max="100" value="100" oninput="updateMasterVolume(this.value)">
+                <label>Общая громкость: <span id="volume-value">100%</span></label>
+                <input type="range" min="0" max="100" value="100" 
+                       oninput="updateMasterVolume(this.value)" id="master-volume-slider">
               </div>
+              <!-- Добавлена кнопка экспорта -->
+              <button class="btn btn-secondary" onclick="exportProject()" title="В разработке" disabled>
+                <i class="fas fa-download"></i> Экспорт проекта
+              </button>
             </div>
           </div>
 
           <div class="tracks-container">
             <div class="tracks-header">
-              <h3>Треки</h3>
+              <h3>Треки <span id="tracks-count">(0)</span></h3>
               <div class="track-controls">
-                <button class="btn" onclick="playAllTracks()">Воспроизвести все</button>
-                <button class="btn" onclick="stopAllTracks()">Стоп</button>
-                <input type="file" id="track-upload" accept="audio/*" onchange="handleFileUpload(event)" style="display: none">
-                <button class="btn btn-primary" onclick="document.getElementById('track-upload').click()">Загрузить трек</button>
+                <button class="btn" onclick="playAllTracks()">
+                  <i class="fas fa-play"></i> Воспроизвести все
+                </button>
+                <button class="btn" onclick="stopAllTracks()">
+                  <i class="fas fa-stop"></i> Стоп
+                </button>
+                <input type="file" id="track-upload" accept="audio/*" 
+                       onchange="handleFileUpload(event)" style="display: none" multiple>
+                <button class="btn btn-primary" onclick="document.getElementById('track-upload').click()">
+                  <i class="fas fa-upload"></i> Загрузить трек
+                </button>
+                <!-- Кнопка с неработающей функцией -->
+                <button class="btn" onclick="saveProject()" title="Сохранить проект (не реализовано)">
+                  <i class="fas fa-save"></i> Сохранить
+                </button>
               </div>
             </div>
             
-            <div id="tracks-list">
-              <!-- Здесь будут отображаться треки -->
+            <div id="tracks-list" class="tracks-list">
+              <!-- Сообщение при отсутствии треков -->
+              <div id="no-tracks-message" class="empty-state">
+                <i class="fas fa-music fa-3x"></i>
+                <p>Нет добавленных треков. Добавьте или загрузите аудиофайл.</p>
+              </div>
             </div>
           </div>
 
           <div class="effects-panel">
             <h3>Эффекты и инструменты</h3>
-            <div class="effect-controls">
+            <!-- Добавлена вкладка для эффектов -->
+            <div class="effects-tabs">
+              <button class="tab-btn active" onclick="switchTab('basic')">Основные</button>
+              <button class="tab-btn" onclick="switchTab('advanced')">Расширенные</button>
+              <button class="tab-btn" onclick="switchTab('fx')">Эффекты</button>
+            </div>
+            
+            <div class="effect-controls" id="basic-controls">
               <!-- Скорость воспроизведения -->
               <div class="effect-group">
-                <label>Скорость воспроизведения</label>
-                <input type="range" min="50" max="200" value="100" oninput="updatePlaybackRate(this.value)">
-                <span class="value-display">100%</span>
+                <label>Скорость воспроизведения: <span id="speed-value">100%</span></label>
+                <input type="range" min="50" max="200" value="100" 
+                       oninput="updatePlaybackRate(this.value)" id="speed-slider">
               </div>
 
               <!-- Панорамирование -->
               <div class="effect-group">
-                <label>Панорамирование</label>
-                <input type="range" min="-100" max="100" value="0" oninput="updatePan(this.value)">
-                <span class="value-display">Центр</span>
+                <label>Панорамирование: <span id="pan-value">Центр</span></label>
+                <input type="range" min="-100" max="100" value="0" 
+                       oninput="updatePan(this.value)" id="pan-slider">
               </div>
 
               <!-- Повтор -->
               <div class="effect-group">
                 <label>Повтор трека</label>
-                <button class="btn" onclick="toggleLoop()">Включить повтор</button>
+                <button class="btn" onclick="toggleLoop()" id="loop-btn">
+                  <i class="fas fa-redo"></i> Включить повтор
+                </button>
+                <small class="hint">Работает только для текущего трека</small>
               </div>
 
               <!-- Точки повтора -->
               <div class="effect-group">
-                <label>Точки повтора (в секундах)</label>
+                <label>Точки повтора (сек.)</label>
                 <div class="loop-points">
-                  <input type="number" min="0" step="0.1" placeholder="Начало" oninput="updateLoopStart(this.value)">
-                  <input type="number" min="0" step="0.1" placeholder="Конец" oninput="updateLoopEnd(this.value)">
+                  <input type="number" min="0" step="0.1" placeholder="Начало" 
+                         oninput="updateLoopStart(this.value)" class="loop-input">
+                  <input type="number" min="0" step="0.1" placeholder="Конец" 
+                         oninput="updateLoopEnd(this.value)" class="loop-input">
                 </div>
               </div>
+            </div>
 
+            <!-- Добавлены дополнительные панели (изначально скрытые) -->
+            <div class="effect-controls" id="advanced-controls" style="display:none;">
               <!-- Обрезка трека -->
               <div class="effect-group">
-                <label>Обрезка трека</label>
+                <label>Обрезка трека (экспериментально)</label>
                 <div class="trim-controls">
-                  <input type="number" min="0" step="0.1" placeholder="Начало" oninput="updateTrimStart(this.value)">
-                  <input type="number" min="0" step="0.1" placeholder="Конец" oninput="updateTrimEnd(this.value)">
-                  <button class="btn" onclick="applyTrim()">Применить</button>
+                  <input type="number" min="0" step="0.1" placeholder="Начало" 
+                         oninput="updateTrimStart(this.value)" id="trim-start">
+                  <input type="number" min="0" step="0.1" placeholder="Конец" 
+                         oninput="updateTrimEnd(this.value)" id="trim-end">
+                  <button class="btn" onclick="applyTrim()">
+                    <i class="fas fa-cut"></i> Применить
+                  </button>
                 </div>
+                <small class="warning">Может не работать в Safari</small>
               </div>
 
               <!-- Метроном -->
               <div class="effect-group">
                 <label>Метроном</label>
                 <div class="metronome-controls">
-                  <input type="number" min="40" max="208" value="120" oninput="updateTempo(this.value)">
+                  <input type="number" min="40" max="208" value="120" 
+                         oninput="updateTempo(this.value)" id="tempo-input">
                   <span>BPM</span>
-                  <button class="btn" onclick="toggleMetronome()">Включить метроном</button>
+                  <button class="btn" onclick="toggleMetronome()" id="metronome-btn">
+                    <i class="fas fa-drum"></i> Включить метроном
+                  </button>
                 </div>
+              </div>
+              
+              <!-- Кнопка с неработающей функцией -->
+              <div class="effect-group">
+                <label>Нормализация громкости</label>
+                <button class="btn" onclick="normalizeVolume()" disabled 
+                        title="В разработке">
+                  <i class="fas fa-wave-square"></i> Нормализовать
+                </button>
+              </div>
+            </div>
+            
+            <!-- Панель эффектов (пустая) -->
+            <div class="effect-controls" id="fx-controls" style="display:none;">
+              <div class="effect-group">
+                <p><i>Раздел эффектов в разработке...</i></p>
+                <button class="btn" disabled>Reverb (скоро)</button>
+                <button class="btn" disabled>Delay (скоро)</button>
+                <button class="btn" disabled>EQ (скоро)</button>
               </div>
             </div>
           </div>
+          
+          <!-- Добавлен подвал с информацией -->
+          <div class="workspace-footer">
+            <p class="version-info">Версия 0.9.1 beta | Для конкурса КРИТ-2026</p>
+            <p class="audio-info" id="audio-context-status">Аудиоконтекст: не инициализирован</p>
+          </div>
         </section>
       </main>
+      
+      <!-- Добавлено простое модальное окно -->
+      <div id="modal-overlay" style="display:none;">
+        <div id="modal-content">
+          <h3 id="modal-title"></h3>
+          <p id="modal-message"></p>
+          <button onclick="closeModal()">OK</button>
+        </div>
+      </div>
     </div>
+    <!-- Основной JS файл -->
     <script src="main.js"></script>
+    <!-- Добавлен файл с утилитами (создаду позже) -->
+    <script src="utils.js"></script>
   </body>
 </html>
